@@ -3,20 +3,19 @@ package adaptor
 import (
 	"errors"
 	"part2/internal/model"
-	"sync"
 
 	"github.com/google/uuid"
 )
 
 type ConcurrentUserStorage struct {
 	db map[string]*model.User
-	mx sync.Mutex
+	//mx sync.Mutex
 }
 
 func CreateConcurrentUserStorage() *ConcurrentUserStorage {
 	return &ConcurrentUserStorage{
 		db: make(map[string]*model.User),
-		mx: sync.Mutex{},
+		//mx: sync.Mutex{},
 	}
 }
 
@@ -41,30 +40,26 @@ func (u *ConcurrentUserStorage) Get(login string) *model.User {
 	return nil
 }
 
-type UserStorageUpdater struct {
-	storage ConcurrentUserStorage
-}
-
-func (u *UserStorageUpdater) Update(user *model.User) error {
+func (u *ConcurrentUserStorage) Update(user *model.User) error {
 	err := validateUser(user)
 	if err != nil {
 		return err
 	}
-	if u.storage.db[user.Login] == nil {
+	if u.db[user.Login] == nil {
 		return errors.New("This login doesn't exist")
 	}
-	u.storage.db[user.Login] = user
+	u.db[user.Login] = user
 	return nil
 }
 
-func (u *UserStorageUpdater) Add(user *model.User) error {
+func (u *ConcurrentUserStorage) Add(user *model.User) error {
 	err := validateUser(user)
 	if err != nil {
 		return err
 	}
-	if u.storage.db[user.Login] != nil {
+	if u.db[user.Login] != nil {
 		return errors.New("This login already exist")
 	}
-	u.storage.db[user.Login] = user
+	u.db[user.Login] = user
 	return nil
 }

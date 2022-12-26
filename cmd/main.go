@@ -1,6 +1,7 @@
 package main
 
 import (
+	"part2/internal/adaptor"
 	"part2/internal/consts"
 	"part2/internal/model"
 	"part2/internal/service"
@@ -11,10 +12,11 @@ func main() {
 	date, _ := time.Parse(consts.LAYOUT, "2000-04-28")
 	date2 := time.Now()
 	date2.Date()
-	u := model.NewUser("alex", "alex228", "qwe", "89658481895", date)
+	u := model.NewUser("alex", "alexlogin", "qwe", "88005553535", date)
 	//fmt.Print(u)
-
-	router := service.SetupRouter()
+	storage := adaptor.CreateConcurrentUserStorage()
+	storage.Add(u)
+	router := service.SetupRouter(*storage)
 
 	router.Run("localhost:8080")
 }
