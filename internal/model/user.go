@@ -1,8 +1,6 @@
 package model
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -12,7 +10,7 @@ type User struct {
 	Login     string    `json:"login"`
 	Password  string    `json:"password"`
 	Phone     string    `json:"phone"`
-	BirthDate time.Time `json:"birthDate"`
+	BirthDate string    `json:"birthDate"`
 }
 
 // type FIO struct {
@@ -21,7 +19,7 @@ type User struct {
 // 	Patronymic string
 // }
 
-func NewUser(name string, login string, password string, phone string, birthDate time.Time) *User {
+func NewUser(name string, login string, password string, phone string, birthDate string) *User {
 	return &User{
 		ID:        uuid.New(),
 		Name:      name,
